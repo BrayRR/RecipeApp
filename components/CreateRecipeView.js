@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, View, ScrollView, Dimensions, Button, Text } from 'react-native';
+import { StyleSheet, SafeAreaView, View, ScrollView, Dimensions, Button, Text, TouchableHighlight } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
 
 export default function CreateRecipeView() {
     return (
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style = {styles.safeArea}>
             <TopView/>
             <MiddleView/>
             <BottomView/>
@@ -88,15 +88,15 @@ export default function CreateRecipeView() {
 
 function TopView() {
     return (
-        <View style={styles.topView}>
+        <View style = {styles.topView}>
             <Button
-                title='Preview'
-                onPress={() => console.log('preview button press')}
+                title = 'Preview'
+                onPress = {() => console.log('preview button press')}
             />
             <TitleView/>
             <Button
-                title='close'
-                onPress={() => console.log('preview button press')}
+                title = 'Close'
+                onPress = {() => console.log('preview button press')}
             />
         </View>
     );
@@ -142,8 +142,8 @@ function BottomView() {
 
 function CircleView(props) {
     return (
-        <View style = {styles.circleView}>
+        <TouchableHighlight style = {styles.circleView}>
             <Text style= {styles.circleViewText}>{props.name}</Text>
-        </View>
+        </TouchableHighlight>
     );
 }
