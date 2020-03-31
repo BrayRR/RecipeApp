@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, SafeAreaView, View, ScrollView, Dimensions, Button, Text, TouchableHighlight } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, SafeAreaView, View, ScrollView, Dimensions, Button, Text, TouchableHighlight, ShadowPropTypesIOS } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -75,25 +75,30 @@ const styles = StyleSheet.create({
     }
 })
 
+const subtitles = ['Overview', 'Duration', 'Ingredients', 'Steps', 'Category'];
 
 export default function CreateRecipeView() {
+    const [subtitleText, setSubtitleText] = useState('Overview');
+
     return (
         <SafeAreaView style = {styles.safeArea}>
-            <TopView/>
-            <MiddleView/>
-            <BottomView/>
+            <TopView subtitleText = {subtitleText}/>
+            <MiddleView setSubtitleText = {setSubtitleText}/>
         </SafeAreaView>
     ); 
 }
 
-function TopView() {
+function TopView(props) {
     return (
         <View style = {styles.topView}>
             <Button
                 title = 'Preview'
                 onPress = {() => console.log('preview button press')}
             />
-            <TitleView/>
+            <View>
+                <Text style = {styles.topViewTitle}>Create Recipe</Text>
+                <Text style = {styles.topViewSubtitle}>{props.subtitleText}</Text>
+            </View>
             <Button
                 title = 'Close'
                 onPress = {() => console.log('preview button press')}
@@ -102,48 +107,28 @@ function TopView() {
     );
 }
 
-function TitleView() {
-    return (
-        <View>
-            <Text style = {styles.topViewTitle}>Create Recipe</Text>
-            <Text style = {styles.topViewSubtitle}>Overview</Text>
-        </View>
-    );
-}
-
-function MiddleView() {
+function MiddleView(props) {
     return (
         <View style={{flex: 8}}>
             <ScrollView
-                horizontal = {properties.scrollView.horizontal}
-                decelerationRate = {properties.scrollView.decelerationRate}
-                snapToInterval = {properties.scrollView.snapToInterval}
-                snapToAlignment = {properties.scrollView.snapToAlignment}
-                style = {styles.scrollView}
+             horizontal = {properties.scrollView.horizontal}
+             decelerationRate = {properties.scrollView.decelerationRate}
+             snapToInterval = {properties.scrollView.snapToInterval}
+             snapToAlignment = {properties.scrollView.snapToAlignment}
+             style = {styles.scrollView}
+             scrollEventThrottle={50}
+             onScroll={(event) => {
+                const offSet = event.nativeEvent.contentOffset.x;
+                const newPage = Math.max(0, Math.floor((offSet + (width / 2)) / width));
+                props.setSubtitleText(subtitles[newPage]);
+             }}
             >
                 <View style = {styles.view}/>
                 <View style = {styles.view2}/>
+                <View style = {styles.view}/>
+                <View style = {styles.view2}/>
+                <View style = {styles.view}/>
             </ScrollView>
         </View>
-    );
-}
-
-function BottomView() {
-    return (
-        <View style={styles.bottomView}>
-            <CircleView name = 'Overview'/>
-            <CircleView name = 'Duration'/>
-            <CircleView name = 'Ingredients'/>
-            <CircleView name = 'Steps'/>
-            <CircleView name = 'Category'/>
-        </View>
-    );
-}
-
-function CircleView(props) {
-    return (
-        <TouchableHighlight style = {styles.circleView}>
-            <Text style= {styles.circleViewText}>{props.name}</Text>
-        </TouchableHighlight>
     );
 }
